@@ -6,7 +6,7 @@ from func import bot_send_text
 
 
 async def scheduler():
-    aioschedule.every(1).minutes.do(test_send)
+#    aioschedule.every(1).minutes.do(test_send)
     while True:
         await aioschedule.run_pending()
         await asyncio.sleep(1)

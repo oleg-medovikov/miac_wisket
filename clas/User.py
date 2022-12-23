@@ -21,3 +21,12 @@ class User(BaseModel):
 
         if res is not None:
             return User(**res)
+
+
+    async def update(self):
+        "Обновление данных о пользователе"
+        query = t_users.select(t_users.c.u_id == self.u_id)
+        res = await database.fetch_one(query)
+
+        if res is not None:
+            pass

@@ -6,7 +6,7 @@ t_users = Table(
     "users",
     metadata,
     Column('u_id', String),  # telegram id
-    Column('sec_id', Integer),  # id системы охраны
+    Column('w_id', Integer),  # id системы охраны
     Column('name', String),  # фамилия
     Column('first_name', String),  # имя
     Column('mid_name', String),  # отчество
