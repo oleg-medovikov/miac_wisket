@@ -1,0 +1,1 @@
+from .config import DATABASE_POSTGRESS, TELEGRAM_API
