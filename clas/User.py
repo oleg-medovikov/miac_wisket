@@ -28,10 +28,32 @@ class User(BaseModel):
             list_.append(User(**row).dict())
         return list_
 
-    async def update(self):
+    @staticmethod
+    async def update(list_: list) -> str:
         "Обновление данных о пользователе"
-        query = t_users.select(t_users.c.u_id == self.u_id)
-        res = await database.fetch_one(query)
+        if len(list_) == 0:
+            return 'Нечего обновлять'
 
-        if res is not None:
-            pass
+        string = ''
+        for user in list_:
+            query = t_users.select(t_users.c.u_id == user['u_id'])
+            res = await database.fetch_one(query)
+
+            # если строки нет, то добавляем
+            if res is None:
+                string += f"добавил пользователя {user['u_id']}"
+                query = t_users.insert().values(**user)
+                await database.execute(query)
+                continue
+
+            # если строчка есть ищем несовпадение значений, чтобы заменить
+            for key, value in dict(res).items():
+                if user[key] != value:
+                    string += f"обновил пользователя {user['u_id']}"
+                    query = t_users.update()\
+                        .where(t_users.c.u_id == user['u_id'])\
+                        .values(**user)
+                    await database.execute(query)
+        if string == '':
+            string = 'Нечего обновлять'
+        return string

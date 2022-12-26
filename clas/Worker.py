@@ -9,7 +9,7 @@ class Worker(BaseModel):
     w_id:       int
     name:       str
     first_name: str
-    mid_mame:   str
+    mid_name:   str
     birthday:   Optional[date]
     phone:      str
     dateupdate: datetime
@@ -35,8 +35,40 @@ class Worker(BaseModel):
                 'w_id':       0,
                 'name':       'Фамилия',
                 'first_name': 'Имя',
-                'mid_mame':   'Отчество',
+                'mid_name':   'Отчество',
                 'birthday':   '2022-01-31',
                 'phone':      '+7(931)777-77-77',
                 'dateupdate': 'не заполнять'
                 }]
+
+    @staticmethod
+    async def update(list_: list) -> str:
+        "Обновление данных о сотрудниках"
+        if len(list_) == 0:
+            return 'Нечего обновлять'
+
+        string = ''
+        for worker in list_:
+            query = t_workers.select(t_workers.c.w_id == worker['w_id'])
+            res = await database.fetch_one(query)
+
+            # если строки нет, то добавляем
+            if res is None:
+                string += f"добавил сотрудника {worker['w_id']}"
+                worker['dateupdate'] = datetime.now()
+                query = t_workers.insert().values(**worker)
+                await database.execute(query)
+                continue
+
+            # если строчка есть ищем несовпадение значений, чтобы заменить
+            for key, value in dict(res).items():
+                if worker[key] != value and key != 'dateupdate':
+                    string += f"обновил сотрудника {worker['w_id']}"
+                    worker['dateupdate'] = datetime.now()
+                    query = t_workers.update()\
+                        .where(t_workers.c.w_id == worker['w_id'])\
+                        .values(**worker)
+                    await database.execute(query)
+        if string == '':
+            string = 'Нечего обновлять'
+        return string
