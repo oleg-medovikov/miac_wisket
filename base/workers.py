@@ -1,6 +1,6 @@
 from .base import metadata
 
-from sqlalchemy import Table, Column, Integer, String
+from sqlalchemy import Table, Column, Integer, String, Date, DateTime
 
 t_workers = Table(
     "workers",
@@ -9,6 +9,7 @@ t_workers = Table(
     Column('name', String),  # фамилия
     Column('first_name', String),  # имя
     Column('mid_name', String),  # отчество
-    Column('birthday', String),  # имя пользователя в телеге если есть
-    Column('phone', String),  # является ли администратором
+    Column('birthday', Date),  # дата рождения
+    Column('phone', String),  # телефон
+    Column('dateupdate', DateTime),  # время обновления строки
         )

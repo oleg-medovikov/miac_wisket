@@ -7,6 +7,11 @@ async def set_default_commands(dp):
             command="start",
             description="Приветсвие"
             ),
+        BotCommand(
+            command="files",
+            description="Файлы для редактирования базы"
+            ),
+
         ]
 
 #    await dp.bot.delete_my_commands(commands)
