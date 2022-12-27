@@ -51,3 +51,5 @@ async def read_excel_file(message: types.Message):
     elif FILE['file_name'] == 'Workers.xlsx':
         MESS = await Worker.update(list_)
         await message.answer(MESS)
+
+    os.remove(DESTINATION)

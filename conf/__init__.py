@@ -1,1 +1,2 @@
-from .config import DATABASE_POSTGRESS, TELEGRAM_API
+from .config import DATABASE_POSTGRESS, TELEGRAM_API, \
+        DATABASE_SVUP
