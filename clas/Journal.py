@@ -2,7 +2,7 @@ from pydantic import BaseModel
 from typing import Optional
 from sqlalchemy import and_
 
-from datetime import date, datetime, time
+from datetime import date, time
 
 from base import database, t_journal
 
@@ -18,14 +18,14 @@ class Journal(BaseModel):
     w_comment:  Optional[str]
 
     @staticmethod
-    async def get(w_id: int) -> 'Journal':
+    async def get(w_id: int, date: 'date') -> 'Journal':
         query = t_journal.select(and_(
-            t_journal.c.day == date.today(),
+            t_journal.c.day == date,
             t_journal.c.w_id == w_id))
         res = await database.fetch_one(query)
         if res is None:
             Dict = {
-                'day': date.today(),
+                'day': date,
                 'w_id': w_id,
                     }
             query = t_journal.insert().values(**Dict)

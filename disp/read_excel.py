@@ -8,7 +8,7 @@ from func import delete_message
 
 NAMES = {
     'Users.xlsx': ['u_id', 'w_id', 'name', 'name_tg', 'admin'],
-    'Workers.xlsx': ['w_id', 'name', 'first_name',
+    'Workers.xlsx': ['w_id', 'id_svup', 'name', 'first_name',
                      'mid_name', 'birthday', 'phone', 'dateupdate'],
     }
 

@@ -7,6 +7,7 @@ from base import database, t_workers
 
 class Worker(BaseModel):
     w_id:       int
+    id_svup:    str
     name:       str
     first_name: str
     mid_name:   str
@@ -33,6 +34,7 @@ class Worker(BaseModel):
         else:
             return [{
                 'w_id':       0,
+                'id_svup':    '[]',
                 'name':       'Фамилия',
                 'first_name': 'Имя',
                 'mid_name':   'Отчество',
@@ -48,8 +50,12 @@ class Worker(BaseModel):
         list_ = []
         if len(res):
             for row in res:
-                list_.append(row['w_id'])
+                list_ += [int(x) for x in row['id_svup'][1:-1].split(',')]
         return list_
+
+    async def get_id_svup(self) -> list:
+        "Делаем из строки список целых чисел"
+        return [int(x) for x in self.id_svup[1:-1].split(',')]
 
     @staticmethod
     async def update(list_: list) -> str:

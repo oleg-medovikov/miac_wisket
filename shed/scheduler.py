@@ -2,10 +2,12 @@ import asyncio
 import aioschedule
 
 from clas import User
-from func import bot_send_text
+from func import bot_send_text, get_time_start, get_time_stop
 
 
 async def scheduler():
+    aioschedule.every(1).hours.do(get_time_start, scheduler=True)
+    aioschedule.every(1).hours.do(get_time_stop, scheduler=True)
 #    aioschedule.every(1).minutes.do(test_send)
     while True:
         await aioschedule.run_pending()
