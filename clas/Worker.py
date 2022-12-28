@@ -42,6 +42,16 @@ class Worker(BaseModel):
                 }]
 
     @staticmethod
+    async def get_all_id() -> list:
+        query = t_workers.select().order_by(t_workers.c.w_id)
+        res = await database.fetch_all(query)
+        list_ = []
+        if len(res):
+            for row in res:
+                list_.append(row['w_id'])
+        return list_
+
+    @staticmethod
     async def update(list_: list) -> str:
         "Обновление данных о сотрудниках"
         if len(list_) == 0:

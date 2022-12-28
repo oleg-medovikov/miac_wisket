@@ -11,6 +11,11 @@ async def set_default_commands(dp):
             command="files",
             description="Файлы для редактирования базы"
             ),
+        BotCommand(
+            command="journal",
+            description="Команды ведения общего журнала"
+            ),
+
 
         ]
 
