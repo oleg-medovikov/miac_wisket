@@ -43,6 +43,7 @@ async def read_excel_file(message: types.Message):
     except Exception as e:
         return await message.answer(str(e))
 
+    df.dropna(inplace=True)
     list_ = df.to_dict('records')
 
     if FILE['file_name'] == 'Users.xlsx':
