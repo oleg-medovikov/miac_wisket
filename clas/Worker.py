@@ -1,19 +1,20 @@
 from pydantic import BaseModel
 from typing import Optional
 from datetime import date, datetime
+from json import loads
 
 from base import database, t_workers
 
 
 class Worker(BaseModel):
     w_id:       int
-    id_svup:    str
+    id_svup:    list
     name:       str
     first_name: str
     mid_name:   str
     birthday:   Optional[date]
     phone:      str
-    dateupdate: datetime
+    date_update: datetime
 
     @staticmethod
     async def get(w_id: int) -> Optional['Worker']:
@@ -67,20 +68,20 @@ class Worker(BaseModel):
         for worker in list_:
             query = t_workers.select(t_workers.c.w_id == worker['w_id'])
             res = await database.fetch_one(query)
-
+            worker['id_svup'] = loads(worker['id_svup'])
             # если строки нет, то добавляем
             if res is None:
                 string += f"добавил сотрудника {worker['w_id']}"
-                worker['dateupdate'] = datetime.now()
+                worker['date_update'] = datetime.now()
                 query = t_workers.insert().values(**worker)
                 await database.execute(query)
                 continue
 
             # если строчка есть ищем несовпадение значений, чтобы заменить
             for key, value in dict(res).items():
-                if worker[key] != value and key != 'dateupdate':
+                if worker[key] != value and key != 'date_update':
                     string += f"обновил сотрудника {worker['w_id']}"
-                    worker['dateupdate'] = datetime.now()
+                    worker['date_update'] = datetime.now()
                     query = t_workers.update()\
                         .where(t_workers.c.w_id == worker['w_id'])\
                         .values(**worker)

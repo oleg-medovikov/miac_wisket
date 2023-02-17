@@ -1,5 +1,4 @@
 from pydantic import BaseModel
-from typing import Optional
 
 from base import database, t_users
 
@@ -12,16 +11,19 @@ class User(BaseModel):
     admin:      bool
 
     @staticmethod
-    async def get(u_id: str) -> Optional['User']:
+    async def get(u_id: str) -> 'User':
         "получение пользователя по телеграм id"
         query = t_users.select(t_users.c.u_id == u_id)
         res = await database.fetch_one(query)
 
         if res is not None:
             return User(**res)
+        else:
+            raise ValueError('Нет такого пользователя!')
 
     @staticmethod
     async def get_all() -> list:
+        "Получение списка пользователей"
         query = t_users.select().order_by(t_users.c.w_id)
         list_ = []
         for row in await database.fetch_all(query):
@@ -54,6 +56,7 @@ class User(BaseModel):
                         .where(t_users.c.u_id == user['u_id'])\
                         .values(**user)
                     await database.execute(query)
+                    break
         if string == '':
             string = 'Нечего обновлять'
         return string

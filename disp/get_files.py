@@ -31,7 +31,7 @@ async def get_files_help(message: types.Message):
 
 
 async def send_excel(message: types.Message, df: pd.DataFrame, file: str):
-
+    "отправка форматированного файла"
     write_styling_excel_file(file, df, 'svod')
     await message.answer_document(open(file, 'rb'))
     os.remove(file)
@@ -45,6 +45,7 @@ Dict_excel = {
 
 @dp.message_handler(commands=Dict_excel.keys())
 async def get_workers_file(message: types.Message):
+    "вытаскиваем из базы данные и запихиваем в эксель"
     await delete_message(message)
 
     USER = await User.get(message['from']['id'])
