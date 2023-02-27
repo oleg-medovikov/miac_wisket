@@ -92,6 +92,7 @@ class Worker(BaseModel):
                         .where(t_workers.c.w_id == worker['w_id'])\
                         .values(**worker)
                     await database.execute(query)
+                    break
         if string == '':
             string = 'Нечего обновлять'
         return string

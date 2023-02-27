@@ -36,7 +36,7 @@ async def get_time_start(scheduler: bool):
             continue
 
         # пытаемся вытащить время прихода
-        id_svup = [int(x) for x in worker['id_svup'][1:-1].split(',')]
+        id_svup = [int(x) for x in worker['id_svup']]
         try:
             TIME = df.loc[
                 df['id_svup'].isin(id_svup),

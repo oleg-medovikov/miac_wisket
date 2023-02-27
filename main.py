@@ -4,7 +4,7 @@ import asyncio
 from disp import dp, on_startup
 from shed import scheduler
 
-warnings.filterwarnings("ignore")
+#warnings.filterwarnings("ignore")
 
 
 async def main():

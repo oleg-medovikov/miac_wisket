@@ -7,6 +7,16 @@ from func import delete_message
 from base import svup_sql
 from func import write_styling_excel_file
 
+sql = """select
+    person.Name as fio, event.TimeVal, event.Remark
+        from
+            (SELECT * from [dbo].[pLogData]
+                where Event = 32
+                and TimeVal > '20230221') as event
+        inner join dbo.pList as  person
+            on(event.HozOrgan = person.id)
+        where person.Name in( 'Шарин', 'Медовиков')"""
+
 
 @dp.message_handler(commands=['start', 'старт'])
 async def send_welcome(message: types.Message):
@@ -18,31 +28,10 @@ async def send_welcome(message: types.Message):
 
     MESS = f'добрый день, {USER.name}!'
 
-    sql = """select
-        person.Name +' '+ person.FirstName +' '+ person.MidName as fio,
-        Time,
-        remark
-    from(
-    SELECT cast(TimeVal as time) as Time, HozOrgan, Remark
-      FROM [dbo].[pLogData]
-      where cast(TimeVal as date) = cast(getdate() as date)
-      and Event = 32 ) as event
-      inner join dbo.pList as  person
-      on(event.HozOrgan = person.id)
-      where person.Name = 'Шарин'
-      order by Time Desc"""
-
-    sql = """
-    select person.Name as fio, event.TimeVal, event.Remark
-    from
-    (SELECT * from [dbo].[pLogData]
-    where Event = 32
-    and TimeVal > '20221101') as event
-    inner join dbo.pList as  person
-    on(event.HozOrgan = person.id)
-    where person.Name in( 'Шарин', 'Медовиков')
-    """
-    df = svup_sql(sql)
+    try:
+        df = svup_sql(sql)
+    except Exception as e:
+        await message.answer(str(e), parse_mode='html')
 
     file = 'temp/sql.xlsx'
 
