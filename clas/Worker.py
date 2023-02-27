@@ -2,6 +2,7 @@ from pydantic import BaseModel
 from typing import Optional
 from datetime import date, datetime
 from json import loads
+from asyncpg.exceptions import DataError
 
 from base import database, t_workers
 
@@ -68,12 +69,16 @@ class Worker(BaseModel):
         string = ''
         for worker in list_:
             query = t_workers.select(t_workers.c.w_id == worker['w_id'])
-            res = await database.fetch_one(query)
+            try:
+                res = await database.fetch_one(query)
+            except DataError:
+                res = None
             worker['id_svup'] = loads(worker['id_svup'])
             # если строки нет, то добавляем
             if res is None:
-                string += f"добавил сотрудника {worker['w_id']}"
+                string += f"добавил сотрудника {worker['name']}"
                 worker['date_update'] = datetime.now()
+                worker.pop('w_id')
                 query = t_workers.insert().values(**worker)
                 await database.execute(query)
                 continue
