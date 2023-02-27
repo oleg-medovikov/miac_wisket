@@ -50,9 +50,8 @@ async def read_excel_file(message: types.Message):
 
     if FILE['file_name'] == 'Users.xlsx':
         MESS = await User.update(list_)
-        await message.answer(MESS)
     elif FILE['file_name'] == 'Workers.xlsx':
         MESS = await Worker.update(list_)
-        await message.answer(MESS)
 
+    await message.answer(MESS)
     os.remove(DESTINATION)

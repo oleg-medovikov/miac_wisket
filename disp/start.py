@@ -14,16 +14,14 @@ async def send_welcome(message: types.Message):
 
     USER = await User.get(message['from']['id'])
     if USER is None:
-        return None
+        await message.answer("неизвестный юзер", parse_mode='html')
 
     MESS = f'добрый день, {USER.name}!'
-    await message.answer(MESS, parse_mode='html')
 
-
-async def procedure(message):
-
-    sql = """select person.Name +' '+ person.FirstName +' '+ person.MidName as fio, Time,
-    remark
+    sql = """select
+        person.Name +' '+ person.FirstName +' '+ person.MidName as fio,
+        Time,
+        remark
     from(
     SELECT cast(TimeVal as time) as Time, HozOrgan, Remark
       FROM [dbo].[pLogData]
@@ -50,4 +48,5 @@ async def procedure(message):
 
     write_styling_excel_file(file, df, 'svod')
     await message.answer_document(open(file, 'rb'))
+    await message.answer(MESS, parse_mode='html')
     os.remove(file)

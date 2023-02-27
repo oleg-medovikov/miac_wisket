@@ -51,12 +51,13 @@ class Worker(BaseModel):
         list_ = []
         if len(res):
             for row in res:
-                list_ += [int(x) for x in row['id_svup'][1:-1].split(',')]
+                list_ += [int(x) for x in row['id_svup']]
         return list_
 
     async def get_id_svup(self) -> list:
+        "теперь бесполезно"
         "Делаем из строки список целых чисел"
-        return [int(x) for x in self.id_svup[1:-1].split(',')]
+        return [int(x) for x in self.id_svup]
 
     @staticmethod
     async def update(list_: list) -> str:
