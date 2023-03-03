@@ -1,6 +1,7 @@
 from .dispetcher import dp, bot
 from aiogram import types
 import pandas as pd
+import numpy as np
 import os
 
 from clas import User, Worker
@@ -45,7 +46,8 @@ async def read_excel_file(message: types.Message):
     except Exception as e:
         return await message.answer(str(e))
 
-    df.dropna(inplace=True)
+    df = df.replace({np.NaN: None})
+    #df.dropna(inplace=True)
     list_ = df.to_dict('records')
 
     if FILE['file_name'] == 'Users.xlsx':

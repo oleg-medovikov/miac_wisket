@@ -14,7 +14,7 @@ class Worker(BaseModel):
     first_name: str
     mid_name:   str
     birthday:   Optional[date]
-    phone:      str
+    phone:      Optional[str]
     date_update: datetime
 
     @staticmethod
@@ -72,11 +72,13 @@ class Worker(BaseModel):
             try:
                 res = await database.fetch_one(query)
             except DataError:
-                res = None
+                "это если в строчке пустой w_id"
+                continue
+
             worker['id_svup'] = loads(worker['id_svup'])
             # если строки нет, то добавляем
             if res is None:
-                string += f"добавил сотрудника {worker['name']}"
+                string += f"\nдобавил сотрудника {worker['name']}"
                 worker['date_update'] = datetime.now()
                 worker.pop('w_id')
                 query = t_workers.insert().values(**worker)
@@ -86,7 +88,7 @@ class Worker(BaseModel):
             # если строчка есть ищем несовпадение значений, чтобы заменить
             for key, value in dict(res).items():
                 if worker[key] != value and key != 'date_update':
-                    string += f"обновил сотрудника {worker['w_id']}"
+                    string += f"\nобновил сотрудника {worker['w_id']}"
                     worker['date_update'] = datetime.now()
                     query = t_workers.update()\
                         .where(t_workers.c.w_id == worker['w_id'])\
