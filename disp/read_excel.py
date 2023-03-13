@@ -4,7 +4,7 @@ import pandas as pd
 import numpy as np
 import os
 
-from clas import User, Worker
+from clas import User, Worker, Work_Group
 from func import delete_message
 
 NAMES = {
@@ -12,6 +12,9 @@ NAMES = {
     'Workers.xlsx': [
         'w_id', 'id_svup', 'name', 'first_name',
         'mid_name', 'birthday', 'phone', 'date_update'
+        ],
+    'Work_Groups.xlsx': [
+        'u_id', 'name', 'workers', 'date_update'
         ],
     }
 
@@ -47,13 +50,15 @@ async def read_excel_file(message: types.Message):
         return await message.answer(str(e))
 
     df = df.replace({np.NaN: None})
-    #df.dropna(inplace=True)
     list_ = df.to_dict('records')
 
-    if FILE['file_name'] == 'Users.xlsx':
-        MESS = await User.update(list_)
-    elif FILE['file_name'] == 'Workers.xlsx':
-        MESS = await Worker.update(list_)
+    MESS = {
+        'Users.xlsx':       User.update(list_),
+        'Workers.xlsx':     Worker.update(list_),
+        'Work_Groups.xlsx': Work_Group.update(list_),
+            }
+
+    MESS = await MESS
 
     await message.answer(MESS)
     os.remove(DESTINATION)

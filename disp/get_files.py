@@ -3,7 +3,7 @@ from aiogram import types
 import pandas as pd
 import os
 
-from clas import User, Worker
+from clas import User, Worker, Work_Group
 from func import delete_message, write_styling_excel_file
 
 
@@ -25,6 +25,8 @@ async def get_files_help(message: types.Message):
         /get_Users
     *Список сотрудников*
         /get_Workers
+    *Список рабочих групп*
+        /get_Work_Groups
     """.replace('_', '\\_')
 
     return await message.answer(MESS, parse_mode='Markdown')
@@ -37,9 +39,9 @@ async def send_excel(message: types.Message, df: pd.DataFrame, file: str):
     os.remove(file)
 
 Dict_excel = {
-    'get_Users':   'temp/Users.xlsx',
-    'get_Workers': 'temp/Workers.xlsx',
-
+    'get_Users':       'temp/Users.xlsx',
+    'get_Workers':     'temp/Workers.xlsx',
+    'get_Work_Groups': 'temp/Work_Groups.xlsx',
         }
 
 
@@ -54,10 +56,13 @@ async def get_workers_file(message: types.Message):
         return None
     command = message.text.replace('/', '')
 
-    list_ = {
-        command == 'get_Users': await User.get_all(),
-        command == 'get_Workers': await Worker.get_all(),
-        }[True]
+    func = {
+        'get_Users':        User.get_all(),
+        'get_Workers':      Worker.get_all(),
+        'get_Work_Groups':  Work_Group.get_all(),
+        }.get(command)
+
+    list_ = await func
 
     df = pd.DataFrame(data=list_)
 

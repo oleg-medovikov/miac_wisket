@@ -1,8 +1,6 @@
 from pydantic import BaseModel
-from typing import Optional
-from datetime import date, datetime
+from datetime import datetime
 from json import loads
-from asyncpg.exceptions import DataError
 
 from base import database, t_work_groups
 
@@ -52,7 +50,7 @@ class Work_Group(BaseModel):
                 'u_id':       0,
                 'name':       'команда SOS',
                 'workers':    '[]',
-                'dateupdate': 'не заполнять'
+                'date_update': 'не заполнять'
                 }]
 
     @staticmethod
