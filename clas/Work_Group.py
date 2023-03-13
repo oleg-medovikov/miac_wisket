@@ -62,7 +62,7 @@ class Work_Group(BaseModel):
         string = ''
         for row in list_:
             query = t_work_groups.select(
-                t_work_groups.c.г_id == row['u_id'])
+                t_work_groups.c.u_id == row['u_id'])
 
             res = await database.fetch_one(query)
 

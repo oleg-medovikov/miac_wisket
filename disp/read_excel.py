@@ -56,7 +56,7 @@ async def read_excel_file(message: types.Message):
         'Users.xlsx':       User.update(list_),
         'Workers.xlsx':     Worker.update(list_),
         'Work_Groups.xlsx': Work_Group.update(list_),
-            }
+            }.get(FILE['file_name'])
 
     MESS = await MESS
 
