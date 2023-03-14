@@ -10,7 +10,9 @@ from base import database, t_journal, t_workers
 class Worker_Day(BaseModel):
     day:        date
     w_id:       int
-    fio:        str
+    name:       str
+    first_name: str
+    mid_name:   str
     time_start: Optional[time]
     time_stop:  Optional[time]
     time_lose:  Optional[int]
@@ -40,10 +42,11 @@ class Worker_Day(BaseModel):
             ]).where(and_(
                 t_journal.c.day >= START,
                 t_journal.c.day <= STOP,
-                t_journal.c.w_id.on_(WORKERS)
-                )).select_from(j)
+                t_journal.c.w_id.in_(WORKERS)
+                )).order_by(t_journal.c.day).select_from(j)
 
         list_ = []
         for row in await database.fetch_all(query):
             list_.append(Worker_Day(**row))
-            return list_
+
+        return list_

@@ -1,15 +1,30 @@
 from pandas import DataFrame
-from datetime import datetime
-from calendar import monthrange
+import locale
+locale.setlocale(locale.LC_TIME, 'ru_RU.UTF-8')
 
 
-def return_mounth(DATE: 'datetime'):
-    "Получение дат начала и конца текущего месяца"
-    days = monthrange(DATE.year, DATE.month)[1]
-    return f'{DATE.year}-{DATE.month}-1', f'{DATE.year}-{DATE.month}-{days}'
+def create_tabel(WDS: list) -> 'DataFrame':
+    FIOs = ['', '']
+    event = ['день недели', '']
 
+    for WD in WDS:
+        FIO = WD.name + ' ' + WD.first_name[0] + '. ' + WD.mid_name[0] + '.'
+        if FIO not in FIOs:
+            FIOs.append(FIO)
+            FIOs.append(FIO)
+            event.append('время прихода')
+            event.append('время ухода')
 
-def create_tabel(WORKERS: list) -> 'DataFrame':
-    df = DataFrame()
+    df = DataFrame(index=[FIOs, event])
+    df.index.names = ['сотрудник', 'событие']
+
+    for WD in WDS:
+        FIO = WD.name + ' ' + WD.first_name[0] + '. ' + WD.mid_name[0] + '.'
+        DAY = WD.day.strftime('%d.%m.%Y')
+        df.loc[('', 'день недели'),    DAY] = WD.day.strftime('%A')
+        df.loc[(FIO, 'время прихода'), DAY] = WD.time_start
+        df.loc[(FIO, 'время ухода'),   DAY] = WD.time_stop
+
+    df = df.fillna('')
 
     return df
