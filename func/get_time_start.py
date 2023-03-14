@@ -82,6 +82,3 @@ async def get_time_start_mounth():
             else:
                 JOURNAL.time_start = TIME
                 await JOURNAL.update()
-
-
-

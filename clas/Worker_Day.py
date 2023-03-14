@@ -43,7 +43,7 @@ class Worker_Day(BaseModel):
                 t_journal.c.day >= START,
                 t_journal.c.day <= STOP,
                 t_journal.c.w_id.in_(WORKERS)
-                )).order_by(t_journal.c.day).select_from(j)
+                )).order_by(t_journal.c.day, t_workers.c.name).select_from(j)
 
         list_ = []
         for row in await database.fetch_all(query):

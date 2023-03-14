@@ -3,7 +3,7 @@ from .send_message import bot_send_text, bot_send_file
 from .delete_message import delete_message
 from .write_styling_excel_file import write_styling_excel_file
 from .get_time_start import get_time_start, get_time_start_mounth
-from .get_time_stop import get_time_stop
+from .get_time_stop import get_time_stop, get_time_stop_mounth
 from .create_tabel import create_tabel
 
 __all__ = [
@@ -16,4 +16,5 @@ __all__ = [
     'get_time_start',
     'create_tabel',
     'get_time_start_mounth',
+    'get_time_stop_mounth',
     ]
