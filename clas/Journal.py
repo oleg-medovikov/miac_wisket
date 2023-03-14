@@ -61,3 +61,10 @@ class Journal(BaseModel):
                     t_journal.c.w_id == self.w_id))\
                 .values(self.dict())
             await database.execute(query)
+
+    @staticmethod
+    async def get_journal(WORKERS: list, START: 'date', STOP: 'date') -> list:
+        "Получаем журнал с событиями"
+        pass
+
+
