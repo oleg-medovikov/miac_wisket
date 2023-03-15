@@ -23,7 +23,7 @@ async def get_time_stop(scheduler: bool):
         SELECT HozOrgan as id_svup, max(TimeVal) as 'time_stop'
             FROM [dbo].[pLogData]
                 where  TimeVal > '{DATE.strftime('%Y%m%d')} 07:00:00'
-                    and Event = 32
+                    --and Event = 32
                     and HozOrgan in ({str(WORKERS)[1:-1]})
         GROUP BY HozOrgan
     """
