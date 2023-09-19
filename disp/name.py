@@ -54,7 +54,7 @@ async def process_simple_calendar(
                 from
                     (SELECT * from [dbo].[pLogData]
                         where Event = 32
-                        and TimeVal >= '{date.strftime('%Y%m%d')}'
+                        and cast(TimeVal as date) = '{date.strftime('%Y%m%d')}'
                         ) as event
                 inner join dbo.pList as  person
                     on(event.HozOrgan = person.id)
