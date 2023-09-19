@@ -10,7 +10,7 @@ from datetime import datetime, date
 from calendar import monthrange
 
 
-def return_mounth(DATE=datetime.today()) -> tuple['date', 'date']:
+def return_mounth(DATE) -> tuple['date', 'date']:
     "Получение дат начала и конца текущего месяца"
     # количество дней в месяце
     days = monthrange(DATE.year, DATE.month)[1]
@@ -22,7 +22,7 @@ async def get_tabel_file(message: types.Message):
     await delete_message(message)
 
     WG = await Work_Group.get(message['from']['id'])
-    START, STOP = return_mounth()
+    START, STOP = return_mounth(datetime.today())
 
     WDS = await Worker_Day.get_journal(WG.workers, START, STOP)
     df = create_tabel(WDS)

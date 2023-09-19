@@ -25,6 +25,15 @@ class Worker(BaseModel):
             return Worker(**res)
 
     @staticmethod
+    async def find(NAME: str) -> 'Worker':
+        query = t_workers.select(t_workers.c.name == NAME)
+        res = await database.fetch_one(query)
+        if res is not None:
+            return Worker(**res)
+        else:
+            raise ValueError('Не нашел такого рабочего!')
+
+    @staticmethod
     async def get_all() -> list:
         query = t_workers.select().order_by(t_workers.c.w_id)
         res = await database.fetch_all(query)
