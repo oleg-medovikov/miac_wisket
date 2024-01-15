@@ -60,7 +60,7 @@ async def update_message(
                     reply_markup=keyboard,
                 )
             )
-            await log.update(name=image.name).apply()
+            await log.update(image_id=image.id).apply()
         except TelegramBadRequest as e:
             print(f"!!!! {str(e)}")
             # если не удалось апдейтить, то удалем и шлём новое

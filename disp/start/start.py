@@ -6,8 +6,14 @@ from aiogram import F, Bot
 from datetime import datetime
 
 from mdls import User, UserLog
-from func import delete_message, update_message, add_keyboard, get_chat_fio
 from conf import CallAny
+from func import (
+    delete_message,
+    update_message,
+    add_keyboard,
+    get_chat_fio,
+    hello_message,
+)
 
 
 @router.message(CommandStart())
@@ -38,8 +44,6 @@ async def command_start_handler(
             )
         return None
 
-    MESS = "Добрый день, доступные Вам команды"
-
     DICT = {}
 
     if not callback_data:
@@ -47,4 +51,6 @@ async def command_start_handler(
 
     DICT["Ваши работники"] = callback_data.pack()
 
-    await update_message(bot, message, MESS, add_keyboard(DICT), image_name="main")
+    await update_message(
+        bot, message, hello_message(user), add_keyboard(DICT), image_name="main"
+    )
