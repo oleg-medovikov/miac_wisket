@@ -29,7 +29,7 @@ async def update_message(
     mode = "html" if html else "Markdown"
 
     # ищем логи сообщений
-    log = await MessLog.query.where(MessLog.chat_id == message.chat.id).gino.first()
+    log = await MessLog.query.where(MessLog.tg_id == message.chat.id).gino.first()
     # ищем картинку в базе
     if image_id:
         image = await Image.get(image_id)
@@ -43,7 +43,7 @@ async def update_message(
                 image = await Image.get(log.image_id)
 
     # в любом случае удаляем комманду пользователя, так как  она не нужна
-    if log.mess_id != message.message_id:
+    if log and log.mess_id != message.message_id:
         await _delete_mess(bot, message.chat.id, message.message_id)
 
     if log and image:
@@ -51,8 +51,8 @@ async def update_message(
         try:
             await bot(
                 EditMessageMedia(
-                    chat_id=log.chat_id,
-                    message_id=log.message_id,
+                    chat_id=log.tg_id,
+                    message_id=log.mess_id,
                     # надо достать айдишник картинки с серверов телеги
                     media=InputMediaPhoto(
                         media=image.file_id, caption=MESS, parse_mode=mode
@@ -64,7 +64,7 @@ async def update_message(
         except TelegramBadRequest as e:
             print(f"!!!! {str(e)}")
             # если не удалось апдейтить, то удалем и шлём новое
-            await _delete_mess(bot, log.chat_id, log.message_id)
+            await _delete_mess(bot, log.tg_id, log.mess_id)
             await _send_new_mess(message, MESS, keyboard, mode, image)
     else:
         await _send_new_mess(message, MESS, keyboard, mode, None)
@@ -90,7 +90,7 @@ async def _send_new_mess(message, MESS, keyboard, mode, image):
             parse_mode=mode,
             reply_markup=keyboard,
         )
-        await MessLog.delete.where(MessLog.chat_id == message.chat.id).gino.status()
+        await MessLog.delete.where(MessLog.tg_id == message.chat.id).gino.status()
         await MessLog.create(
             tg_id=message.chat.id, mess_id=message.message_id, image_id=image.id
         )

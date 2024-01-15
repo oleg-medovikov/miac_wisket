@@ -1,30 +1,50 @@
 from disp.start import router
-from aiogram.types import Message
+from typing import Optional
+from aiogram.types import Message, CallbackQuery
 from aiogram.filters import CommandStart
-from aiogram import Bot
+from aiogram import F, Bot
+from datetime import datetime
 
 from mdls import User, UserLog
-from func import delete_message, get_chat_fio
+from func import delete_message, update_message, add_keyboard, get_chat_fio
+from conf import CallAny
 
 
 @router.message(CommandStart())
-async def command_start_handler(message: Message, bot: Bot):
+@router.callback_query(CallAny.filter(F.action == "start"))
+async def command_start_handler(
+    mess: Message | CallbackQuery, bot: Bot, callback_data: Optional[CallAny] = None
+):
     """
-    начальная команда бота
+    начальная команда бота,одновременно отрабатывает команду start и салбек с экшеном start
     """
-    await delete_message(message)
+    if isinstance(mess, CallbackQuery) and isinstance(mess.message, Message):
+        await delete_message(mess.message)
+        chat_id = mess.message.chat.id
+        message = mess.message
+    elif isinstance(mess, Message):
+        await delete_message(mess)
+        chat_id = mess.chat.id
+        message = mess
+    else:
+        return
 
-    user = await User.query.where(User.tg_id == message.chat.id).gino.first()
+    user = await User.query.where(User.tg_id == chat_id).gino.first()
     if user is None:
-        await UserLog.create(
-            event=f"Неизвестный пользователь {message.chat.id} {get_chat_fio(message)}"
-        )
+        if isinstance(mess, Message):
+            await UserLog.create(
+                time=datetime.now(),
+                event=f"Неизвестный пользователь {chat_id} {get_chat_fio(mess)}",
+            )
         return None
 
-    mess = "Добрый день, доступные Вам команды"
+    MESS = "Добрый день, доступные Вам команды"
 
     DICT = {}
 
-    DICT["Ваши работники"] = ("watch_workers",)
+    if not callback_data:
+        callback_data = CallAny(action="watch_workers", user_id=user.id)
 
-    await message.answer("привет!")
+    DICT["Ваши работники"] = callback_data.pack()
+
+    await update_message(bot, message, MESS, add_keyboard(DICT), image_name="main")
