@@ -46,7 +46,7 @@ async def update_Image(message: Message, state: FSMContext, bot: Bot):
 
     # Сброс состояния и сохранённых данных у пользователя
     await state.clear()
-    DICT = {"Хорошо": CallAny(action="start")}
+    DICT = {"Хорошо": CallAny(action="start").pack()}
     await update_message(
         bot,
         message,
