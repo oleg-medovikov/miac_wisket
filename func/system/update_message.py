@@ -4,8 +4,8 @@ from aiogram.methods.delete_message import DeleteMessage
 from aiogram.methods.edit_message_media import EditMessageMedia
 from aiogram.exceptions import TelegramBadRequest
 from aiogram.exceptions import TelegramNotFound
-
 from aiogram import Bot
+import logging
 
 from mdls import Image, MessLog
 
@@ -62,7 +62,7 @@ async def update_message(
             )
             await log.update(image_id=image.id).apply()
         except TelegramBadRequest as e:
-            print(f"!!!! {str(e)}")
+            logging.error(f"!!!! не удалось изменить картинку \n{str(e)}")
             # если не удалось апдейтить, то удалем и шлём новое
             await _delete_mess(bot, log.tg_id, log.mess_id)
             await _send_new_mess(message, MESS, keyboard, mode, image)
@@ -74,10 +74,12 @@ async def _delete_mess(bot, chat_id: int, mess_id: int):
     """обрабатываю исключения"""
     try:
         await bot(DeleteMessage(chat_id=chat_id, message_id=mess_id))
-    except TelegramBadRequest:
-        pass
+    except TelegramBadRequest as e:
+        logging.error(
+            "!!!! не удалось удалить сообщение, неправильный реквест\n" + str(e)
+        )
     except TelegramNotFound:
-        pass
+        logging.error("!!!! не удалось удалить сообщение, не найдено")
 
 
 async def _send_new_mess(message, MESS, keyboard, mode, image):

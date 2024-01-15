@@ -25,7 +25,6 @@ async def command_start_handler(
     начальная команда бота,одновременно отрабатывает команду start и салбек с экшеном start
     """
     if isinstance(mess, CallbackQuery) and isinstance(mess.message, Message):
-        # await delete_message(mess.message)
         chat_id = mess.message.chat.id
         message = mess.message
     elif isinstance(mess, Message):
@@ -55,6 +54,7 @@ async def command_start_handler(
         callback_data.action = "settings"
         DICT["настройки"] = callback_data.pack()
 
+    print(DICT)
     await update_message(
         bot, message, hello_message(user), add_keyboard(DICT), image_name="main"
     )

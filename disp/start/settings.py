@@ -11,13 +11,20 @@ from conf import CallAny
 async def settings(callback: CallbackQuery, callback_data: CallAny, bot: Bot):
     """
     тут несколько кнопок для добавления групп, воркеров и прочего
+    1 - редактируем группы
+    2 - редактируем воркеров
     """
     DICT = {}
 
-    callback_data.action = "create_group"
-    DICT["создать группу"] = callback_data.pack()
+    callback_data.action = "get_files"
+    callback_data.file = 1
+    DICT["ред. группы"] = callback_data.pack()
+
+    callback_data.file = 2
+    DICT["ред. работников"] = callback_data.pack()
 
     callback_data.action = "start"
+    callback_data.file = 0
     DICT["назад"] = callback_data.pack()
 
     if isinstance(callback.message, Message):
