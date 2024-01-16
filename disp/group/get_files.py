@@ -2,7 +2,7 @@ from disp.start import router
 from aiogram.types import CallbackQuery, Message
 from aiogram import F, Bot
 
-from func import add_keyboard, update_message, get_all_Group
+from func import add_keyboard, update_message, get_all_Struct
 from conf import CallAny
 
 
@@ -13,7 +13,7 @@ async def get_files(callback: CallbackQuery, callback_data: CallAny, bot: Bot):
     """
     func = {
         # 1: get_all_Worker(),
-        1: get_all_Group(),
+        1: get_all_Struct(),
     }[callback_data.file]
 
     file = await func

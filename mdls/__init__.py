@@ -3,7 +3,7 @@ from .UserLog import UserLog
 from .MessLog import MessLog
 from .Image import Image
 from .Worker import Worker
-from .Group import Group
+from .Struct import Struct
 
 
 __all__ = [
@@ -12,5 +12,5 @@ __all__ = [
     "MessLog",
     "Image",
     "Worker",
-    "Group",
+    "Struct",
 ]

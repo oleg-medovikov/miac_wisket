@@ -6,14 +6,14 @@ from .system.add_keyboard import add_keyboard
 from .text.get_chat_fio import get_chat_fio
 from .text.hello_message import hello_message
 
-from .base.get_all_Group import get_all_Group
+from .base.get_all_Struct import get_all_Struct
 
 __all__ = [
     # text
     "get_chat_fio",
     "hello_message",
     # base
-    "get_all_Group",
+    "get_all_Struct",
     # system
     "set_default_commands",
     "delete_message",

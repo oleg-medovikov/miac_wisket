@@ -11,14 +11,14 @@ from conf import CallAny
 async def settings(callback: CallbackQuery, callback_data: CallAny, bot: Bot):
     """
     тут несколько кнопок для добавления групп, воркеров и прочего
-    1 - редактируем группы
+    1 - редактируем структуру
     2 - редактируем воркеров
     """
     DICT = {}
 
     callback_data.action = "get_files"
     callback_data.file = 1
-    DICT["ред. группы"] = callback_data.pack()
+    DICT["ред. структуру"] = callback_data.pack()
 
     callback_data.file = 2
     DICT["ред. работников"] = callback_data.pack()
