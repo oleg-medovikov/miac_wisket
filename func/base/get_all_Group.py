@@ -4,7 +4,7 @@ from mdls import Group, User, Image
 from conf import db
 
 
-async def get_all_group() -> str:
+async def get_all_Group() -> str:
     """Вытаскиваем все группы и возвращаем путь до файла"""
 
     DATA = (
@@ -19,7 +19,7 @@ async def get_all_group() -> str:
                 Group.date_update,
             ]
         )
-        .select_from(Group.join(User).join(Group))
+        .select_from(Group.join(User).join(Image))
         .order_by(Group.id)
         .gino.all()
     )

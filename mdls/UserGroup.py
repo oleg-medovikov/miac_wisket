@@ -6,7 +6,7 @@ class UserGroup(db.Model):
     __table_args__ = {"extend_existing": True}
 
     user_id = db.Column(db.SmallInteger, db.ForeignKey("users.id"))
-    group_id = db.Column(db.SmallInteger, db.ForeignKey("group.id"))
+    group_id = db.Column(db.SmallInteger, db.ForeignKey("groups.id"))
 
     @property
     def user(self):

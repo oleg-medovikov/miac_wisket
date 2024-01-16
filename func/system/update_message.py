@@ -1,5 +1,12 @@
 from typing import Optional
-from aiogram.types import InputMediaPhoto, Message, InlineKeyboardMarkup
+from aiogram.types import (
+    InputMediaPhoto,
+    InputMediaDocument,
+    FSInputFile,
+    Message,
+    InlineKeyboardMarkup,
+    message_id,
+)
 from aiogram.methods.delete_message import DeleteMessage
 from aiogram.methods.edit_message_media import EditMessageMedia
 from aiogram.exceptions import TelegramBadRequest
@@ -18,6 +25,7 @@ async def update_message(
     html: bool = False,
     image_id: Optional[int] = None,
     image_name: Optional[str] = None,
+    file_path: Optional[str] = None,
 ):
     """
     изменение сообщения с обработкой исключений
@@ -49,6 +57,22 @@ async def update_message(
     if log and image:
         # если сообщение есть, то нужно его апдейтить
         try:
+            if file_path:
+                # если нужно отправить файл, заменяем картинку на файл
+                return await bot(
+                    EditMessageMedia(
+                        chat_id=log.tg_id,
+                        message_id=log.mess_id,
+                        # надо достать айдишник картинки с серверов телеги
+                        media=InputMediaDocument(
+                            media=FSInputFile(
+                                file_path, filename=file_path.split("/")[-1]
+                            )
+                        ),
+                        reply_markup=keyboard,
+                    )
+                )
+
             await bot(
                 EditMessageMedia(
                     chat_id=log.tg_id,
@@ -61,6 +85,8 @@ async def update_message(
                 )
             )
             await log.update(image_id=image.id).apply()
+            # добавляем проверку на наличие файла
+
         except TelegramBadRequest as e:
             logging.error(f"!!!! не удалось изменить картинку \n{str(e)}")
             # если не удалось апдейтить, то удалем и шлём новое
