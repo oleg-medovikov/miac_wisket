@@ -2,6 +2,7 @@ from pandas import DataFrame
 
 from mdls import Struct, Image
 from conf import db
+from func import write_styling_excel
 
 
 async def get_all_Struct() -> str:
@@ -10,11 +11,10 @@ async def get_all_Struct() -> str:
     DATA = (
         await db.select(
             [
-                Struct.id,
                 Struct.oid,
                 Struct.image_id,
                 Image.name,
-                Struct.type,
+                Struct.kind,
                 Struct.name,
                 Struct.short_name,
                 Struct.level,
@@ -22,18 +22,17 @@ async def get_all_Struct() -> str:
             ]
         )
         .select_from(Struct.outerjoin(Image))
-        .order_by(Struct.id)
+        .order_by(Struct.oid)
         .gino.all()
     )
 
     df = DataFrame(
         data=DATA,
         columns=[
-            "id",
             "oid",
             "image_id",
             "image_name",
-            "type",
+            "kind",
             "name",
             "short_name",
             "level",
@@ -42,5 +41,5 @@ async def get_all_Struct() -> str:
     )
 
     filename = "/tmp/Struct.xlsx"
-    df.to_excel(filename, index=False)
+    write_styling_excel(filename, df, "struct")
     return filename
