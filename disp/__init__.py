@@ -7,6 +7,8 @@ from .start.settings import settings
 from .base.get_files import get_files
 from .base.read_excel import read_excel
 
+from .admin.change_oid import change_oid
+
 __all__ = [
     # base
     "get_files",
@@ -18,4 +20,6 @@ __all__ = [
     "update_Image",
     "add_Image_delete",
     "settings",
+    # admin
+    "change_oid",
 ]

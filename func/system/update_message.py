@@ -5,7 +5,6 @@ from aiogram.types import (
     FSInputFile,
     Message,
     InlineKeyboardMarkup,
-    message_id,
 )
 from aiogram.methods.delete_message import DeleteMessage
 from aiogram.methods.edit_message_media import EditMessageMedia
@@ -47,12 +46,12 @@ async def update_message(
         image = None
         # если не указана картинка смотрим, что там в логе
         if log and log.image_id:
-            if "user" in log.name:
-                image = await Image.get(log.image_id)
+            image = await Image.get(log.image_id)
 
     # в любом случае удаляем комманду пользователя, так как  она не нужна
     if log and log.mess_id != message.message_id:
         await _delete_mess(bot, message.chat.id, message.message_id)
+        await _delete_mess(bot, message.chat.id, log.mess_id)
 
     if log and image:
         # если сообщение есть, то нужно его апдейтить
