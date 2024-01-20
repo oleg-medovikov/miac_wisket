@@ -8,6 +8,7 @@ from func import (
     update_message,
     add_keyboard,
     read_Struct,
+    read_Worker,
 )
 from mdls import User
 from conf import CallAny
@@ -35,6 +36,7 @@ async def read_excel(message: Message, bot: Bot):
 
     FUNC = {
         "Struct.xlsx": read_Struct(user),
+        "Worker.xlsx": read_Worker(user),
     }.get(file_name)
 
     if FUNC is None:
