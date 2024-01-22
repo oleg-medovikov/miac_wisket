@@ -9,9 +9,11 @@ main.load_dotenv(".conf")
 class Settings:
     BOT_API: str
     PSQL: str
+    SVUP_SQL: str
 
 
 settings = Settings(
     BOT_API=getenv("BOT_API", default=""),
     PSQL=getenv("PSQL", default=""),
+    SVUP_SQL=getenv("SVUP_SQL", default=""),
 )

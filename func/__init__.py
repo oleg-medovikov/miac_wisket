@@ -11,6 +11,7 @@ from .base.get_all_Struct import get_all_Struct
 from .base.read_Struct import read_Struct
 from .base.get_all_Worker import get_all_Worker
 from .base.read_Worker import read_Worker
+from .base.get_svup_worker import get_svup_worker
 
 __all__ = [
     # text
@@ -21,6 +22,7 @@ __all__ = [
     "read_Struct",
     "get_all_Worker",
     "read_Worker",
+    "get_svup_worker",
     # system
     "set_default_commands",
     "delete_message",

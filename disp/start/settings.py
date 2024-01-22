@@ -23,6 +23,9 @@ async def settings(callback: CallbackQuery, callback_data: CallAny, bot: Bot):
     callback_data.file = 2
     DICT["ред. работников"] = callback_data.pack()
 
+    callback_data.file = 3
+    DICT["список svup работников"] = callback_data.pack()
+
     callback_data.action = "start"
     callback_data.file = 0
     DICT["назад"] = callback_data.pack()
