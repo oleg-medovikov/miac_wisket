@@ -8,6 +8,7 @@ from .base.get_files import get_files
 from .base.read_excel import read_excel
 
 from .admin.change_oid import change_oid
+from .admin.jurnal_mounth import journal_mount
 
 __all__ = [
     # base
@@ -22,4 +23,5 @@ __all__ = [
     "settings",
     # admin
     "change_oid",
+    "journal_mount",
 ]

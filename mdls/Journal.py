@@ -9,6 +9,7 @@ class Journal(db.Model):
     __tablename__ = "journal"
     __table_args__ = {"extend_existing": True}
 
+    id = db.Column(db.Integer, primary_key=True, comment="просто идентификатор")
     day = db.Column(db.Date, comment="Дата")
     worker_id = db.Column(
         db.SmallInteger, db.ForeignKey("worker.id"), comment="Идентификатор сотрудника"

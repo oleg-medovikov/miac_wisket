@@ -43,7 +43,7 @@ async def get_time_stop(date: Optional[datetime]):
     )
 
     sql = f"""
-SELECT HozOrgan as id_svup, max(TimeVal) as 'time_stop'
+SELECT HozOrgan as id_svup, max(TimeVal) as 'time_stop', min(TimeVal) as 'time_start'
     FROM [dbo].[pLogData]
     where  TimeVal between '{today.strftime('%Y%m%d')} 07:00:00' and '{tomorrow.strftime('%Y%m%d')} 04:00:00' 
         --and Event = 32
@@ -66,6 +66,8 @@ SELECT HozOrgan as id_svup, max(TimeVal) as 'time_stop'
             )
         except ValueError:
             continue
+        except AttributeError:
+            continue
         else:
             # если по каким-то причинам записи в журнале не было,
             # нужно ее создать, узнав дату прихода
@@ -80,4 +82,4 @@ SELECT HozOrgan as id_svup, max(TimeVal) as 'time_stop'
                     time_stop=time_stop,
                 )
             else:
-                await Journal.update(time_stop=time_stop).apply()
+                await journal.update(time_stop=time_stop).apply()
