@@ -6,7 +6,7 @@ from func import get_time_start, get_time_stop
 
 
 async def scheduler():
-    aioschedule.every(1).hours.do(get_time_start)
+    aioschedule.every(1).hours.do(get_time_start, date=None)
     aioschedule.every(1).hours.do(get_time_stop, date=None)
     # aioschedule.every(1).hours.do(get_time_stop)
     # aioschedule.every(1).minutes.do(test_send)
