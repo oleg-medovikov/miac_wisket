@@ -9,7 +9,7 @@ async def read_Struct(user: User) -> str:
     df = read_excel(
         "/tmp/_Struct.xlsx", usecols=[_.name for _ in Struct.__table__.columns]
     )
-
+    df.dropna(how="all", inplace=True)
     mess = ""
     for row in df.to_dict("records"):
         for key in ["image_id"]:

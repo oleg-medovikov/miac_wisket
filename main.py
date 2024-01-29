@@ -6,6 +6,7 @@ from aiogram.fsm.storage.memory import MemoryStorage
 from conf import settings, db
 from func import set_default_commands
 from disp import start, base, admin
+from shed import scheduler
 
 
 logging.basicConfig(level=logging.INFO)
@@ -23,7 +24,7 @@ async def on_startup():
     await db.gino.create_all()
     await set_default_commands(bot)
     await bot.delete_webhook(drop_pending_updates=True)
-    await dp.start_polling(bot)
+    await asyncio.gather(dp.start_polling(bot), scheduler())
 
 
 async def on_shutdown():

@@ -15,6 +15,8 @@ async def read_Worker(user: User) -> str:
         ],
     )
 
+    df.dropna(how="all", inplace=True)
+
     mess = ""
     for row in df.to_dict("records"):
         for key in ["image_id"]:
@@ -30,6 +32,11 @@ async def read_Worker(user: User) -> str:
                 row[key] = row[key].replace("\u2028", "\n")
             elif isinstance(row[key], int):
                 row[key] = str(row[key])
+            elif isinstance(row[key], float):
+                try:
+                    row[key] = str(int(row[key]))
+                except ValueError:
+                    row[key] = ""
             else:
                 row[key] = ""
 
@@ -41,6 +48,8 @@ async def read_Worker(user: User) -> str:
                     row[key] = None
             elif isinstance(row[key], Timestamp):
                 row[key] = row[key].date()
+            else:
+                row[key] = None
 
         # если есть идентичная строчка пропускаем
         object = await Worker.query.where(

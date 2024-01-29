@@ -13,7 +13,13 @@ from .base.get_all_Worker import get_all_Worker
 from .base.read_Worker import read_Worker
 from .base.get_svup_worker import get_svup_worker
 
+from .journal.get_time_start import get_time_start
+from .journal.get_time_stop import get_time_stop
+
 __all__ = [
+    # journal
+    "get_time_start",
+    "get_time_stop",
     # text
     "get_chat_fio",
     "hello_message",
