@@ -49,6 +49,8 @@ async def command_start_handler(
         callback_data = CallAny(action="watch_workers", user_id=user.id)
 
     # DICT["Ваши работники"] = callback_data.pack()
+    callback_data.action = "journal_month"
+    DICT["журнал"] = callback_data.pack()
 
     if user.admin:
         callback_data.action = "settings"

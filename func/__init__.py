@@ -15,11 +15,13 @@ from .base.get_svup_worker import get_svup_worker
 
 from .journal.get_time_start import get_time_start
 from .journal.get_time_stop import get_time_stop
+from .journal.get_months import get_months
 
 __all__ = [
     # journal
     "get_time_start",
     "get_time_stop",
+    "get_months",
     # text
     "get_chat_fio",
     "hello_message",
