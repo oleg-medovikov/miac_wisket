@@ -27,6 +27,10 @@ async def read_Worker(user: User) -> str:
             if isinstance(row[key], str):
                 row[key] = [int(_) for _ in literal_eval(row[key])]
 
+        for key in ["chief"]:
+            if isinstance(row[key], int):
+                row[key] = bool(row[key])
+
         for key in ["name", "first_name", "oid", "mid_name", "phone"]:
             if isinstance(row[key], str):
                 row[key] = row[key].replace("\u2028", "\n")

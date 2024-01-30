@@ -10,6 +10,7 @@ class Worker(db.Model):
     oid = db.Column(db.String(length=20), db.ForeignKey("struct.oid"))
     image_id = db.Column(db.SmallInteger, db.ForeignKey("image.id"), nullable=True)
     id_svup = db.Column(db.ARRAY(db.SmallInteger))
+    chief = db.Column(db.Boolean)
     name = db.Column(db.String(length=50))
     first_name = db.Column(db.String(length=50))
     mid_name = db.Column(db.String(length=50))
