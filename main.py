@@ -29,6 +29,15 @@ async def on_startup():
 
 async def on_shutdown():
     await db.pop_bind().close()
+    tasks = [
+        t
+        for t in asyncio.all_tasks()
+        if (t is not asyncio.current_task() and t._coro.__name__ != "main")
+    ]
+
+    for task in tasks:
+        print(task)
+        task.cancel()
 
 
 if __name__ == "__main__":
