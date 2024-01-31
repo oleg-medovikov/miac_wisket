@@ -6,7 +6,7 @@ from aiogram.fsm.storage.memory import MemoryStorage
 from conf import settings, db
 from func import set_default_commands
 from disp import start, base, admin
-from shed import scheduler
+from shed import start_scheduler
 
 
 logging.basicConfig(level=logging.INFO)
@@ -24,24 +24,14 @@ async def on_startup():
     await db.gino.create_all()
     await set_default_commands(bot)
     await bot.delete_webhook(drop_pending_updates=True)
-    await asyncio.gather(dp.start_polling(bot), scheduler())
 
-
-async def on_shutdown():
-    await db.pop_bind().close()
-    tasks = [
-        t
-        for t in asyncio.all_tasks()
-        if (t is not asyncio.current_task() and t._coro.__name__ != "main")
-    ]
-
-    for task in tasks:
-        print(task)
-        task.cancel()
+    task1 = asyncio.create_task(dp.start_polling(bot))
+    task2 = asyncio.create_task(start_scheduler())
+    await asyncio.gather(task1, task2)
 
 
 if __name__ == "__main__":
     try:
         asyncio.run(on_startup())
-    except KeyboardInterrupt:
-        asyncio.run(on_shutdown())
+    except (KeyboardInterrupt, SystemExit):
+        pass
