@@ -6,12 +6,12 @@ from sqlalchemy import func, and_
 import pandas as pd
 import locale
 
-locale.setlocale(locale.LC_TIME, "ru_RU.UTF-8")
 
-
-from func import update_message, add_keyboard
+from func import update_message, add_keyboard, highlight_time, write_file
 from mdls import User, Worker, Struct, Journal
 from conf import CallAny, db
+
+locale.setlocale(locale.LC_TIME, "ru_RU.UTF-8")
 
 
 @router.callback_query(CallAny.filter(F.action == "journal_get"))
@@ -98,9 +98,11 @@ async def journal_get(callback: CallbackQuery, callback_data: CallAny, bot: Bot)
         values=["time_start", "time_stop"],
     ).stack(0, future_stack=True)
     p = p.fillna("")
+    p = p.style.map(highlight_time)
 
     file = "/tmp/table.xlsx"
-    p.to_excel(file)
+    # p.to_excel(file)
+    write_file(p, file)
 
     dict_ = {"назад": CallAny(action="start").pack()}
     mess = "Заполните файл и киньте мне его обратно в чат. Я применю изменения"

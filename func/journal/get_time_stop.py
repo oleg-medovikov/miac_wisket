@@ -64,9 +64,10 @@ SELECT HozOrgan as id_svup, max(TimeVal) as 'time_stop', min(TimeVal) as 'time_s
             time_stop = (
                 df.loc[df.id_svup.isin(worker.id_svup), "time_stop"].max().time()
             )
-        except ValueError:
-            continue
-        except AttributeError:
+        except (ValueError, AttributeError):
+            if journal:
+                continue
+            await Journal.create(day=today, worker_id=worker.id)
             continue
         else:
             # если по каким-то причинам записи в журнале не было,
