@@ -1,10 +1,10 @@
 from disp.base import router
 from aiogram.types import CallbackQuery, Message
 from aiogram import F, Bot
-import logging
 from sqlalchemy import func, and_
 import pandas as pd
 import locale
+import logging
 
 
 from func import update_message, add_keyboard, highlight_time, write_file
@@ -22,8 +22,6 @@ async def journal_get(callback: CallbackQuery, callback_data: CallAny, bot: Bot)
     -- нужно определить всех воркеров пользователя
     --
     """
-
-    logging.info(f"!!! {callback_data}")
 
     if callback_data.user_id:
         user = await User.get(callback_data.user_id)
@@ -59,8 +57,8 @@ async def journal_get(callback: CallbackQuery, callback_data: CallAny, bot: Bot)
                     + "."
                 ).label("fio"),
                 Journal.day,
-                Journal.time_start,
-                Journal.time_stop,
+                func.to_char(Journal.time_start, "HH24:MI"),
+                func.to_char(Journal.time_stop, "HH24:MI"),
             ]
         )
         .select_from(Journal.join(Worker).join(Struct))
@@ -97,11 +95,11 @@ async def journal_get(callback: CallbackQuery, callback_data: CallAny, bot: Bot)
         columns=["day", "week"],
         values=["time_start", "time_stop"],
     ).stack(0, future_stack=True)
+
     p = p.fillna("")
     p = p.style.map(highlight_time)
 
     file = "/tmp/table.xlsx"
-    # p.to_excel(file)
     write_file(p, file)
 
     dict_ = {"назад": CallAny(action="start").pack()}

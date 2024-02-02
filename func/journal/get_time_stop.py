@@ -6,7 +6,7 @@ from mdls import Worker, Journal
 from conf import svup_sql
 
 
-async def get_time_stop(date: Optional[datetime]):
+async def get_time_stop(date: Optional[datetime] = None):
     """
     Функция определяет время ухода воркеров с работы
      - достаем все id_svup всех воркеров,

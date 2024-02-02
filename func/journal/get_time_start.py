@@ -6,7 +6,7 @@ from mdls import Worker, Journal
 from conf import svup_sql
 
 
-async def get_time_start(date: Optional[datetime]):
+async def get_time_start(date: Optional[datetime] = None):
     """
     Функция определяет время прихода воркеров на работу
      - если дата не пустая  игнорируем время выхода из функции
@@ -44,18 +44,18 @@ SELECT HozOrgan as id_svup, min(TimeVal) as 'time_start'
 
     for worker in workers:
         journal = await Journal.query.where(
-            and_(
-                Journal.day == date,
-                Journal.worker_id == worker.id,
-                Journal.time_start != null(),
-            )
+            and_(Journal.day == today, Journal.worker_id == worker.id)
         ).gino.first()
 
-        if journal:
+        if journal is not None and journal.time_start is not None:
             continue
+
         try:
             time = df.loc[df.id_svup.isin(worker.id_svup), "time_start"].min().time()
         except ValueError:
             continue
         else:
-            await Journal.create(day=date, worker_id=worker.id, time_start=time)
+            if journal:
+                await journal.update(time_start=time).apply()
+            else:
+                await Journal.create(day=today, worker_id=worker.id, time_start=time)

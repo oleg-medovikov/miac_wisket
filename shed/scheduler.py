@@ -9,8 +9,8 @@ scheduler = AsyncIOScheduler()
 
 
 async def start_scheduler():
-    scheduler.add_job(get_time_start, "interval", hours=1, args=[None])
-    scheduler.add_job(get_time_stop, "interval", hours=1, args=[None])
+    scheduler.add_job(get_time_start, "cron", hour="*", minute=21)
+    scheduler.add_job(get_time_stop, "cron", hour="*", minute=0)
     # scheduler.add_job(test_send, "interval", seconds=5)
     scheduler.start()
 
