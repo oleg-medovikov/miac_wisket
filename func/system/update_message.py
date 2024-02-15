@@ -110,6 +110,7 @@ async def _delete_mess(bot, chat_id: int, mess_id: int):
 async def _send_new_mess(message, MESS, keyboard, mode, image):
     # если нет логов, то нужно отправить новое сообщение и записать его в логи
     if image:
+        # logging.info("!!!!" + str(image.to_dict()))
         message = await message.answer_photo(
             # BufferedInputFile(image.file, filename=image.name + ".png"),
             photo=image.file_id,

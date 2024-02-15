@@ -15,6 +15,7 @@ from .base.get_svup_worker import get_svup_worker
 
 from .journal.get_time_start import get_time_start
 from .journal.get_time_stop import get_time_stop
+from .journal.get_time_lose import get_time_lose
 from .journal.get_months import get_months
 from .journal.highlight_time import highlight_time
 from .journal.write_file import write_file
@@ -26,6 +27,7 @@ __all__ = [
     "get_months",
     "highlight_time",
     "write_file",
+    "get_time_lose",
     # text
     "get_chat_fio",
     "hello_message",

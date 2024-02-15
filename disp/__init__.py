@@ -11,6 +11,7 @@ from .base.journal_get import journal_get
 
 from .admin.change_oid import change_oid
 from .admin.jurnal_mounth import journal_mount
+from .admin.time_lose import time_lose
 
 __all__ = [
     # base
@@ -28,4 +29,5 @@ __all__ = [
     # admin
     "change_oid",
     "journal_mount",
+    "time_lose",
 ]
