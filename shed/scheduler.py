@@ -2,7 +2,7 @@ import logging
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
 
-from func import get_time_start, get_time_stop
+from func import get_time_start, get_time_stop, get_time_lose
 
 # Инициализация планировщика
 scheduler = AsyncIOScheduler()
@@ -11,6 +11,7 @@ scheduler = AsyncIOScheduler()
 async def start_scheduler():
     scheduler.add_job(get_time_start, "cron", hour="*", minute=21)
     scheduler.add_job(get_time_stop, "cron", hour="*", minute=0)
+    scheduler.add_job(get_time_lose, "cron", day="*", hour=7, minute=0)
     # scheduler.add_job(test_send, "interval", seconds=5)
     scheduler.start()
 
