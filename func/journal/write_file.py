@@ -32,7 +32,7 @@ def write_file(df: Styler, filename: str):
     # добавляем границы
     # Определяем стиль границ
     border_top = Border(top=Side(style="thin"))
-    border_bottom = Border(bottom=Side(style="thin"))
+    # border_bottom = Border(bottom=Side(style="thin"))
 
     # Применяем стиль границ к первым 10 строкам
     for row in ws.iter_rows(
@@ -42,10 +42,10 @@ def write_file(df: Styler, filename: str):
         max_col=ws.max_column,
     ):
         for cell in row:
-            if cell.row % 2 == 0:  # Если строка четная
+            if cell.row % 4 == 0:  # Если строка четная
                 cell.border = border_top
-            else:  # Если строка нечетная
-                cell.border = border_bottom
+            # else:  # Если строка нечетная
+            #    cell.border = border_bottom
 
     # удаляем столбец
     ws.delete_cols(5, 1)

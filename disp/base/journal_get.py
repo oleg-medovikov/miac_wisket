@@ -59,6 +59,7 @@ async def journal_get(callback: CallbackQuery, callback_data: CallAny, bot: Bot)
                 Journal.day,
                 func.to_char(Journal.time_start, "HH24:MI"),
                 func.to_char(Journal.time_stop, "HH24:MI"),
+                Journal.time_lose,
             ]
         )
         .select_from(Journal.join(Worker).join(Struct))
@@ -85,15 +86,32 @@ async def journal_get(callback: CallbackQuery, callback_data: CallAny, bot: Bot)
         "day",
         "time_start",
         "time_stop",
+        "time_lose",
     ]
     df = pd.DataFrame(data=journal_entries, columns=columns)
     df["week"] = pd.to_datetime(df.day).dt.strftime("%A")
+    df["time_work"] = (
+        (
+            pd.to_datetime(df["time_stop"], format="%H:%M")
+            - pd.to_datetime(df["time_start"], format="%H:%M")
+        )
+        .dt.total_seconds()
+        .apply(
+            lambda s: f"{s // 3600:02.0f};{(s % 3600) // 60:02.0f}"
+            if not pd.isnull(s)
+            else ""
+        )
+    )
+    df["time_lose"] = df["time_lose"].apply(
+        lambda s: f"{s // 60:02.0f}.{s % 60:02.0f}" if not pd.isnull(s) else ""
+    )
+
     df_sorted = df.sort_values("day")
 
     p = df_sorted.pivot(
         index=["oid", "struct", "kind", "fio"],
         columns=["day", "week"],
-        values=["time_start", "time_stop"],
+        values=["time_start", "time_stop", "time_work", "time_lose"],
     ).stack(0, future_stack=True)
 
     p = p.fillna("")
