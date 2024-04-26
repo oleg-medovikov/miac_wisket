@@ -3,7 +3,7 @@ from aiogram import F, Bot
 from aiogram.types import Message, File
 import logging
 
-from func import delete_message, add_keyboard, update_message
+from func import delete_message, add_keyboard, update_message, get_chat_ids
 from mdls import User, Image
 from conf import CallAny
 
@@ -14,6 +14,7 @@ async def add_Image(message: Message, bot: Bot):
     проверить, есть ли такое изображение в базе и добавить его
     """
     await delete_message(message)
+    await get_chat_ids(message, bot)
 
     if not message.photo:
         logger = logging.getLogger(__name__)

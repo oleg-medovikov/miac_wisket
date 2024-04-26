@@ -5,7 +5,13 @@ import re
 import pandas as pd
 import logging
 
-from func import delete_message, update_message, add_keyboard, get_time_stop
+from func import (
+    delete_message,
+    update_message,
+    add_keyboard,
+    get_time_stop,
+    get_time_start,
+)
 from mdls import User
 from conf import CallAny
 
@@ -41,6 +47,7 @@ async def journal_mount(message: Message, bot: Bot):
 
     for date in dates:
         logging.info(f"!!! Узнаю время ухода для даты {date.strftime('%d-%m-%Y')}")
+        await get_time_start(date)
         await get_time_stop(date)
         logging.info("!!! Успех")
 

@@ -1,6 +1,8 @@
 from datetime import datetime, timedelta
+import logging
 from sqlalchemy import and_
 from typing import Optional
+from datetime import datetime
 
 from mdls import Worker, Journal
 from conf import svup_sql
@@ -35,6 +37,12 @@ async def get_time_stop(date: Optional[datetime] = None):
         today = date
         tomorrow = date + timedelta(days=1)
 
+    today = today.replace(hour=7)
+    tomorrow = tomorrow.replace(hour=4)
+
+    today_int = int((today - datetime(1970, 1, 1)).total_seconds())
+    tomorrow_int = int((tomorrow - datetime(1970, 1, 1)).total_seconds())
+
     workers = await Worker.query.gino.all()
 
     # однострочник, который вытаскивает все id в одну строчку через запятую
@@ -45,13 +53,14 @@ async def get_time_stop(date: Optional[datetime] = None):
     sql = f"""
 SELECT HozOrgan as id_svup, max(TimeVal) as 'time_stop', min(TimeVal) as 'time_start'
     FROM [dbo].[pLogData]
-    where  TimeVal between '{today.strftime('%Y%m%d')} 07:00:00' and '{tomorrow.strftime('%Y%m%d')} 04:00:00' 
+    where DATEDIFF(second, '1970-01-01', TimeVal) between {today_int} and {tomorrow_int} 
         --and Event = 32
         and HozOrgan in ({svup_ids})
     GROUP BY HozOrgan
 """
 
     df = svup_sql(sql)
+    logging.info(str(df.head()))
 
     for worker in workers:
         # берём строчку в журналёе

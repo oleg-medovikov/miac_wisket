@@ -1,5 +1,5 @@
 from datetime import datetime
-from sqlalchemy import and_, null
+from sqlalchemy import and_
 from typing import Optional
 
 from mdls import Worker, Journal
@@ -24,6 +24,12 @@ async def get_time_start(date: Optional[datetime] = None):
     else:
         today = date
 
+    start = today.replace(hour=7)
+    stop = today.replace(hour=23)
+
+    start_int = int((start - datetime(1970, 1, 1)).total_seconds())
+    stop_int = int((stop - datetime(1970, 1, 1)).total_seconds())
+
     workers = await Worker.query.gino.all()
 
     # однострочник, который вытаскивает все id в одну строчку через запятую
@@ -34,7 +40,7 @@ async def get_time_start(date: Optional[datetime] = None):
     sql = f"""
 SELECT HozOrgan as id_svup, min(TimeVal) as 'time_start'
     FROM [dbo].[pLogData]
-        where  TimeVal between '{today.strftime('%Y%m%d')} 07:00:00' and '{today.strftime('%Y%m%d')} 23:00:00'
+        where DATEDIFF(second, '1970-01-01', TimeVal) between {start_int} and {stop_int}
             -- and Event = 32
             and HozOrgan in ({svup_ids})
     GROUP BY HozOrgan
@@ -52,7 +58,7 @@ SELECT HozOrgan as id_svup, min(TimeVal) as 'time_start'
 
         try:
             time = df.loc[df.id_svup.isin(worker.id_svup), "time_start"].min().time()
-        except ValueError:
+        except (ValueError, AttributeError):
             continue
         else:
             if journal:
